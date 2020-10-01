@@ -31,7 +31,10 @@ pipeline {
                         envMap = [ohEnv           : 'production',
                                   kapacitorUrl    : "${PRODUCTION_KAPACITOR_URL}",
                                   kapacitorDb     : "${PRODUCTION_KAPACITOR_DB}",
-                                  slackChannel    : "${PRODUCTION_KAPACITOR_SLACK_CHANNEL}"
+                                  slackChannel    : "${PRODUCTION_KAPACITOR_SLACK_CHANNEL}",
+                                  aseUrl          : "${PRODUCTION_ASE_URL}",
+                                  lsUrl           : "${PRODUCTION_LS_URL}",
+                                  mdmUrl          : "${PRODUCTION_MDM_URL}"
                                  ]
                         echo 'PROD TAG'
                     }
@@ -41,7 +44,10 @@ pipeline {
                         envMap = [ohEnv           : 'staging',
                                   kapacitorUrl    : "${STAGING_KAPACITOR_URL}",
                                   kapacitorDb     : "${STAGING_KAPACITOR_DB}",
-                                  slackChannel    : "${STAGING_KAPACITOR_SLACK_CHANNEL}"
+                                  slackChannel    : "${STAGING_KAPACITOR_SLACK_CHANNEL}",
+                                  aseUrl          : "${STAGING_ASE_URL}",
+                                  lsUrl           : "${STAGING_LS_URL}",
+                                  mdmUrl          : "${STAGING_MDM_URL}"
                                  ]
                         echo 'STAGING TAG'
                     }
@@ -56,6 +62,9 @@ pipeline {
                     env.kapacitorUrl = envMap.kapacitorUrl
                     env.kapacitorDb = envMap.kapacitorDb
                     env.slackChannel = envMap.slackChannel
+                    env.aseUrl = envMap.aseUrl
+                    env.lsUrl = envMap.lsUrl
+                    env.mdmUrl = envMap.mdmUrl
                 }
             }
         }
@@ -69,6 +78,18 @@ pipeline {
             steps {
                 echo 'Deploying the scripts...'
                 echo "kapacitor URL: ${env.kapacitorUrl}"
+                echo "kapacitor DB: ${env.kapacitorDb}"
+                echo "slackChannel: ${env.slackChannel}"
+                echo "aseUrl: ${env.aseUrl}"
+                echo "lsUrl: ${env.lsUrl}"
+                echo "mdmUrl: ${env.mdmUrl}"
+
+                withCredentials([
+                    usernamePassword(credentials: 'credentials-kapacitor', usernameVariable: KAPACITOR_USER, passwordVariable: KAPACITOR_PASSWORD)
+                ]) {
+                    echo "user: ${KAPACITOR_USER}"
+                    echo "pwd: ${KAPACITOR_PASSWORD}"
+                }
             }
         }
     }

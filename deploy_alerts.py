@@ -48,6 +48,8 @@ def get_credentials():
     """
     if 'KAPACITOR_USER' not in os.environ or 'KAPACITOR_PASSWORD' not in os.environ:
         raise SystemExit('Undefined credentials for kapacitor')
+    print(os.environ.get('KAPACITOR_USER'))
+    print(os.environ.get('KAPACITOR_PASSWORD'))
     return (os.environ.get('KAPACITOR_USER'), os.environ.get('KAPACITOR_PASSWORD'))
 
 
@@ -159,6 +161,14 @@ kapacitor_slack_channel = os.environ.get('KAPACITOR_SLACK_CHANNEL')
 ase_url = os.environ.get('ASE_URL')
 ls_url = os.environ.get('LS_URL')
 mdm_url = os.environ.get('MDM_URL')
+
+print(kapacitor_url)
+print(kapacitor_db)
+print(kapacitor_slack_channel)
+print(ase_url)
+print(ls_url)
+print(mdm_url)
+
 
 app_urls = {
     ASE: ase_url,

@@ -1,0 +1,92 @@
+//var db = 'staging_performance'
+//var slackChannel = '#app-staging-alerts'
+var db = 'production_performance'
+var slackChannel = '#app-production-alerts'
+
+var rp = 'autogen'
+
+var measurement = 'system_cpu_usage'
+
+var whereFilter = lambda: TRUE
+
+var groupBy = ['application', 'private-ip']
+
+var period = 5m
+
+var every = 1m
+
+var triggerPercentage = 50
+
+var name = 'CPU'
+
+var message = 'CPU exceeded ' + string(triggerPercentage) + '%
+App: {{ index .Tags "application" }}
+PrivateIP: {{ index .Tags "private-ip" }}
+Pctg: {{ index .Fields "percentage" }}%
+TaskName: {{.TaskName}}
+Time: {{ .Time }}'
+
+var idVar = name
+
+var idTag = 'alertID'
+
+var levelTag = 'level'
+
+var messageField = 'message'
+
+var durationField = 'duration'
+
+var outputDB = 'chronograf'
+
+var outputRP = 'autogen'
+
+var outputMeasurement = 'alerts'
+
+var triggerType = 'threshold'
+
+var data = stream
+    |from()
+        .database(db)
+        .retentionPolicy(rp)
+        .measurement(measurement)
+        .groupBy(groupBy)
+        .where(whereFilter)
+    |window()
+        .period(period)
+        .every(every)
+        .align()
+    |mean('value')
+        .as('meancpu')
+
+var trigger = data
+    |eval(lambda: int("meancpu" * 100.0))
+        .as('percentage')
+        .keep()
+
+trigger
+    |alert()
+        .warn(lambda: "percentage" >= triggerPercentage)
+        .message(message)
+        .id(idVar)
+        .idTag(idTag)
+        .levelTag(levelTag)
+        .messageField(messageField)
+        .durationField(durationField)
+        .noRecoveries()
+        .slack()
+        .channel(slackChannel)
+
+trigger
+    |eval(lambda: int("percentage"))
+        .as('percentage')
+        .keep()
+    |influxDBOut()
+        .create()
+        .database(outputDB)
+        .retentionPolicy(outputRP)
+        .measurement(outputMeasurement)
+        .tag('alertName', name)
+        .tag('triggerType', triggerType)
+
+trigger
+    |httpOut('output')

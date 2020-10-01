@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent { 
+        docker { 
+            image 'python:3.5.1' 
+        } 
+    }
 
     environment {
         STAGING_KAPACITOR_URL = 'http://localhost:9092'
@@ -89,6 +93,8 @@ pipeline {
                 ]) {
                     echo "user: ${KAPACITOR_USER}"
                     echo "pwd: ${KAPACITOR_PASSWORD}"
+
+                    sh 'python --version' 
                 }
             }
         }

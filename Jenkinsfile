@@ -95,9 +95,10 @@ pipeline {
                     echo "user: ${KAPACITOR_USER}"
                     echo "pwd: ${KAPACITOR_PASSWORD}"
 
-                    sh 'python --version'
-                    sh 'pip install requests'
-                    sh "KAPACITOR_URL=${env.kapacitorUrl} \
+                    withEnv(["HOME=${env.WORKSPACE}"]) {
+                        sh 'python --version'
+                        sh 'pip install requests'
+                        sh "KAPACITOR_URL=${env.kapacitorUrl} \
                         KAPACITOR_DB=${env.kapacitorDb} \
                         KAPACITOR_SLACK_CHANNEL=${env.slackChannel} \
                         KAPACITOR_PASSWORD=${KAPACITOR_PASSWORD} \
@@ -106,6 +107,7 @@ pipeline {
                         LS_URL=${env.lsUrl} \
                         MDM_URL=${env.mdmUrl} \
                         python deploy_alerts.py"
+                    }
                 }
             }
         }

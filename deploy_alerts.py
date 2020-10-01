@@ -48,8 +48,6 @@ def get_credentials():
     """
     if 'KAPACITOR_USER' not in os.environ or 'KAPACITOR_PASSWORD' not in os.environ:
         raise SystemExit('Undefined credentials for kapacitor')
-    print(os.environ.get('KAPACITOR_USER'))
-    print(os.environ.get('KAPACITOR_PASSWORD'))
     return (os.environ.get('KAPACITOR_USER'), os.environ.get('KAPACITOR_PASSWORD'))
 
 
@@ -162,14 +160,6 @@ ase_url = os.environ.get('ASE_URL')
 ls_url = os.environ.get('LS_URL')
 mdm_url = os.environ.get('MDM_URL')
 
-print(kapacitor_url)
-print(kapacitor_db)
-print(kapacitor_slack_channel)
-print(ase_url)
-print(ls_url)
-print(mdm_url)
-
-
 app_urls = {
     ASE: ase_url,
     LS: ls_url,
@@ -187,10 +177,12 @@ for root, directory, files in os.walk(PATH):
             alert_content = update_alert_content(
                 f_path, kapacitor_db, kapacitor_slack_channel, app_urls)
             if alert_id in currentAlerts:
+                print(alert_id + " existed")
                 result = update_alert(
                     kapacitor_url, alert_id, kapacitor_db, alert_content)
                 currentAlerts.remove(alert_id)
             else:
+                print(alert_id + " new")
                 result = create_alert(
                     kapacitor_url, alert_id, kapacitor_db, alert_content)
             status = alert_id.ljust(50, '.')

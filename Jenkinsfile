@@ -85,7 +85,7 @@ pipeline {
                 echo "mdmUrl: ${env.mdmUrl}"
 
                 withCredentials([
-                    usernamePassword(credentials: 'credentials-kapacitor', usernameVariable: 'KAPACITOR_USER', passwordVariable: 'KAPACITOR_PASSWORD')
+                    usernamePassword(credentialsId: 'credentials-kapacitor', usernameVariable: 'KAPACITOR_USER', passwordVariable: 'KAPACITOR_PASSWORD')
                 ]) {
                     echo "user: ${KAPACITOR_USER}"
                     echo "pwd: ${KAPACITOR_PASSWORD}"

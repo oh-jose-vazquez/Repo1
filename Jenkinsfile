@@ -95,7 +95,8 @@ pipeline {
                     echo "user: ${KAPACITOR_USER}"
                     echo "pwd: ${KAPACITOR_PASSWORD}"
 
-                    sh 'python --version' 
+                    sh 'python --version'
+                    sh 'pip install requests'
                     sh "KAPACITOR_URL=${env.kapacitorUrl} \
                         KAPACITOR_DB=${env.kapacitorDb} \
                         KAPACITOR_SLACK_CHANNEL=${env.slackChannel} \

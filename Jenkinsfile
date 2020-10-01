@@ -104,7 +104,7 @@ pipeline {
                         ASE_URL=${env.aseUrl} \
                         LS_URL=${env.lsUrl} \
                         MDM_URL=${env.mdmUrl} \
-                        python3 deployAlerts.py"
+                        python deploy_alerts.py"
                 }
             }
         }

@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        STAGING_KAPACITOR_URL = 'http://localhost:9092'
+        STAGING_KAPACITOR_URL = 'http://41b415a4462c.ngrok.io'
         STAGING_KAPACITOR_DB = 'staging_performance'
         STAGING_KAPACITOR_SLACK_CHANNEL = '#app-staging-alerts'
         STAGING_ASE_URL = 'https://staging-ase-internal.outcomehealthtech.com:443'

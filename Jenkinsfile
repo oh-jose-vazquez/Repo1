@@ -95,12 +95,16 @@ pipeline {
                     echo "user: ${KAPACITOR_USER}"
                     echo "pwd: ${KAPACITOR_PASSWORD}"
 
-                    KAPACITOR_URL="${env.kapacitorUrl}"
-
-                    export KAPACITOR_URL
-
                     sh 'python --version' 
-                    sh 'python deploy_alerts.py'
+                    sh "KAPACITOR_URL=${env.kapacitorUrl} \
+                        KAPACITOR_DB=${env.kapacitorDb} \
+                        KAPACITOR_SLACK_CHANNEL=${env.slackChannel} \
+                        KAPACITOR_PASSWORD=${KAPACITOR_PASSWORD} \
+                        KAPACITOR_USER=${KAPACITOR_USER}  \
+                        ASE_URL=${env.aseUrl} \
+                        LS_URL=${env.lsUrl} \
+                        MDM_URL=${env.mdmUrl} \
+                        python3 deployAlerts.py"
                 }
             }
         }
